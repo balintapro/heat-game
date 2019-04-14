@@ -1,0 +1,56 @@
+.formwrap {
+  position: relative;
+}
+
+form {
+  width: auto;
+  position: relative;
+  margin: 10px auto 0 auto;
+}
+
+form select {
+  font-family: $body-font;
+  background-color: $dropdown;
+  color: $score-color;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  font-size: 14px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  -webkit-appearance: button;
+  appearance: button;
+  outline: none;
+}
+
+form::before {
+  content: "❯";
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 42px;
+  height: 42px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 45px;
+  color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+}
+
+form:hover::before {
+  color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+form select option {
+  padding: 30px;
+  max-width: 100%;
+}
+
+@media screen and (min-width: 700px) {
+  form select {
+    width: 400px;
+  }
+}

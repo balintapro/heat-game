@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Heat the Game</title>
+	<link rel="stylesheet" href="/styles.5c8f3eab.css">
+<script src="/styles.5c8f3eab.js"></script></head>
+
+<body>
+	<div id="map"></div>
+	<div class="wrapper row">
+		<div class="col-md-4">
+			<p>Your score:</p><span id="score">0</span>
+		</div>
+		<div class="col-md-4">
+			<p>Heat: </p><span id="n-heat">0</span>
+		</div>
+		<div class="col-md-4">
+			<p>Heat to beat: </p><span id="o-heat"></span>
+		</div>
+		<form>
+			<select id="select">
+				<option>Please choose a country</option>
+			</select>
+		</form>
+	</div>
+	<div id="plus-points" class="info"> +100 </div>
+	<div id="lose" class="info">
+		<h1>You lose!</h1>
+		<p>Game will reset.</p>
+	</div>
+</body>
+<link href="https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css" rel="stylesheet">
+<script src="/js.00a46daa.js"></script>
+
+</html>
