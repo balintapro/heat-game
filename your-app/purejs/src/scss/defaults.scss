@@ -22,6 +22,10 @@ body {
 	-webkit-box-sizing: border-box;
 }
 
+h1 {
+	margin-top: 0;
+}
+
 p {
 	line-height: $score-size;
 	font-size: $score-size;
@@ -54,7 +58,7 @@ p {
 	background-color: $score-box-bg;
 	margin: 0 auto 0 auto;
 	transform-origin: bottom;
-	width: 200px;
+	width: 275px;
 	padding: 8px;
 	border-radius: 10px;
 	color: $score-box-color;

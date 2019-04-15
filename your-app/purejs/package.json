@@ -36,6 +36,7 @@
 		"sass": "^1.14.3"
 	},
 	"dependencies": {
+		"config.js": "^0.1.0",
 		"fetchers": "^0.2.1"
 	}
 }

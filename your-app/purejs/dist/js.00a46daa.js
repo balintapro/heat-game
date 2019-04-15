@@ -8094,7 +8094,92 @@ define(String.prototype, "padRight", "".padEnd);
 "pop,reverse,shift,keys,values,entries,indexOf,every,some,forEach,map,filter,find,findIndex,includes,join,slice,concat,push,splice,unshift,sort,lastIndexOf,reduce,reduceRight,copyWithin,fill".split(",").forEach(function (key) {
   [][key] && define(Array, key, Function.call.bind([][key]));
 });
-},{"core-js/shim":"../node_modules/core-js/shim.js","regenerator-runtime/runtime":"../node_modules/babel-polyfill/node_modules/regenerator-runtime/runtime.js","core-js/fn/regexp/escape":"../node_modules/core-js/fn/regexp/escape.js"}],"../node_modules/mapbox-gl/dist/mapbox-gl.js":[function(require,module,exports) {
+},{"core-js/shim":"../node_modules/core-js/shim.js","regenerator-runtime/runtime":"../node_modules/babel-polyfill/node_modules/regenerator-runtime/runtime.js","core-js/fn/regexp/escape":"../node_modules/core-js/fn/regexp/escape.js"}],"js/store.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.store = void 0;
+const store = {
+  oldCountry: "",
+  oldHeat: 273,
+  newCountry: "",
+  newHeat: "",
+  score: 0,
+  map
+};
+exports.store = store;
+},{}],"js/config.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.mapboxAccessToken = exports.APIKEY = void 0;
+const APIKEY = "19b2288059c1f9dd1164ecaf9ca7b295";
+exports.APIKEY = APIKEY;
+const mapboxAccessToken = "pk.eyJ1IjoiYWJhbGludDg4IiwiYSI6ImNqdWUwamFieTA0amU0NHF4dGF0NXA0ajUifQ.cxLl7qyDfSRk-GM62qT1xA";
+exports.mapboxAccessToken = mapboxAccessToken;
+},{}],"js/apiCalls.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.weatherByCapital = exports.euCountries = void 0;
+
+var _config = require("../js/config");
+
+const euCountries = async () => {
+  const fetchedCapital = await fetch("https://restcountries.eu/rest/v2/regionalbloc/eu");
+  const fetchedCapitalData = await fetchedCapital.json();
+  console.log(fetchedCapitalData);
+  return fetchedCapitalData;
+};
+
+exports.euCountries = euCountries;
+
+const weatherByCapital = async weather => {
+  const fetchedWeather = await fetch("http://api.openweathermap.org/data/2.5/weather?q=" + weather + "&APPID=" + _config.APIKEY);
+  const fetchedWeatherData = await fetchedWeather.json();
+  const fetchedWeatherByCapital = await fetchedWeatherData;
+  const fahrenheit = fetchedWeatherByCapital.main.temp;
+  const roundedFahrenheit = Math.round(fahrenheit);
+  return roundedFahrenheit - 273;
+};
+
+exports.weatherByCapital = weatherByCapital;
+},{"../js/config":"js/config.js"}],"js/events.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.loose = exports.bounce = void 0;
+
+const bounce = () => {
+  const plusPoints = document.getElementById("plus-points");
+  plusPoints.classList.add('bounce-me');
+  setTimeout(() => {
+    plusPoints.classList.remove('bounce-me');
+  }, 3000);
+};
+
+exports.bounce = bounce;
+
+const loose = temp => {
+  const lose = document.getElementById("lose");
+  const celsiusLose = document.getElementById("cels-lose");
+  celsiusLose.textContent = temp;
+  lose.classList.add('restart-me');
+  setTimeout(() => {
+    location.reload();
+  }, 15000);
+};
+
+exports.loose = loose;
+},{}],"../node_modules/mapbox-gl/dist/mapbox-gl.js":[function(require,module,exports) {
 var define;
 var global = arguments[3];
 /* Mapbox GL JS is licensed under the 3-Clause BSD License. Full text of license: https://github.com/mapbox/mapbox-gl-js/blob/v0.53.1/LICENSE.txt */
@@ -31071,51 +31156,25 @@ var global = arguments[3];
 
   return mapboxgl;
 });
-},{}],"js/index.js":[function(require,module,exports) {
+},{}],"js/mapbox.js":[function(require,module,exports) {
 "use strict";
 
-require("babel-polyfill");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.newMarker = exports.geocodeIt = exports.mapbox = void 0;
 
 var _mapboxGl = _interopRequireDefault(require("mapbox-gl"));
 
+var _config = require("../js/config");
+
+var _store = require("../js/store");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const APIKEY = "19b2288059c1f9dd1164ecaf9ca7b295";
-const mapboxAccessToken = "pk.eyJ1IjoiYWJhbGludDg4IiwiYSI6ImNqdWUwamFieTA0amU0NHF4dGF0NXA0ajUifQ.cxLl7qyDfSRk-GM62qT1xA";
-const store = {
-  oldCountry: "",
-  oldHeat: "",
-  newCountry: "",
-  newHeat: "",
-  score: 0,
-  map
-};
-
-const euCountries = async () => {
-  const fetchedCapital = await fetch("https://restcountries.eu/rest/v2/regionalbloc/eu");
-  const fetchedCapitalData = await fetchedCapital.json();
-  console.log(fetchedCapitalData);
-  return fetchedCapitalData;
-};
-
-const weatherByCapital = async weather => {
-  const fetchedWeather = await fetch("http://api.openweathermap.org/data/2.5/weather?q=" + weather + "&APPID=" + APIKEY);
-  const fetchedWeatherData = await fetchedWeather.json();
-  const fetchedWeatherByCapital = await fetchedWeatherData;
-  const fahrenheit = fetchedWeatherByCapital.main.temp;
-  const roundedFahrenheit = Math.round(fahrenheit);
-  return roundedFahrenheit;
-};
-
-const geocode = async place => {
-  const fetchedLatlng = await fetch("https://api.mapbox.com/geocoding/v5/mapbox.places/" + place + ".json?types=country&access_token=" + mapboxAccessToken);
-  const fetchedLatlngData = await fetchedLatlng.json();
-  return fetchedLatlngData.features[0].center;
-};
-
 const mapbox = () => {
-  _mapboxGl.default.accessToken = mapboxAccessToken;
-  store.map = new _mapboxGl.default.Map({
+  _mapboxGl.default.accessToken = _config.mapboxAccessToken;
+  _store.store.map = new _mapboxGl.default.Map({
     container: 'map',
     style: 'mapbox://styles/abalint88/cjue86suc0tjo1fpnzuitbrt9',
     center: [15, 48],
@@ -31123,60 +31182,69 @@ const mapbox = () => {
   });
 };
 
-const bounce = () => {
-  const plusPoints = document.getElementById("plus-points");
-  plusPoints.classList.add('bounce-me');
-  setTimeout(() => {
-    plusPoints.classList.remove('bounce-me');
-  }, 3000);
+exports.mapbox = mapbox;
+
+const geocodeIt = async place => {
+  const fetchedLatlng = await fetch("https://api.mapbox.com/geocoding/v5/mapbox.places/" + place + ".json?types=country&access_token=" + _config.mapboxAccessToken);
+  const fetchedLatlngData = await fetchedLatlng.json();
+  return fetchedLatlngData.features[0].center;
 };
 
-const loose = () => {
-  const plusPoints = document.getElementById("lose");
-  plusPoints.classList.add('restart-me');
-  setTimeout(() => {
-    location.reload();
-  }, 15000);
-};
+exports.geocodeIt = geocodeIt;
 
 const newMarker = place => {
-  let marker = new _mapboxGl.default.Marker().setLngLat(place).addTo(store.map);
+  let marker = new _mapboxGl.default.Marker().setLngLat(place).addTo(_store.store.map);
   return marker;
 };
 
+exports.newMarker = newMarker;
+},{"mapbox-gl":"../node_modules/mapbox-gl/dist/mapbox-gl.js","../js/config":"js/config.js","../js/store":"js/store.js"}],"js/index.js":[function(require,module,exports) {
+"use strict";
+
+require("babel-polyfill");
+
+var _store = require("../js/store");
+
+var _apiCalls = require("../js/apiCalls");
+
+var _events = require("../js/events");
+
+var _mapbox = require("../js/mapbox");
+
 const selectedCountry = async event => {
   if (event && event.target && event.target.value) {
-    let targetValue = event.target.value;
-    let targetName = event.target.selectedOptions[0].innerText;
-    let place = await geocode(targetName);
-    store.oldCountry = store.newCountry;
-    store.oldHeat = store.newHeat;
-    store.newCountry = targetName;
-    store.newHeat = await weatherByCapital(targetValue);
+    const targetValue = event.target.value;
+    const targetName = event.target.selectedOptions[0].innerText;
+    const place = await (0, _mapbox.geocodeIt)(targetName);
+    _store.store.oldCountry = _store.store.newCountry;
+    _store.store.newCountry = targetName;
+    _store.store.oldHeat = _store.store.newHeat;
+    _store.store.newHeat = await (0, _apiCalls.weatherByCapital)(targetValue);
     event.target.selectedOptions[0].setAttribute("disabled", "true");
 
-    if (store.oldHeat < store.newHeat) {
-      store.score = store.score + 100;
-      document.getElementById("score").textContent = store.score;
-      document.getElementById("o-heat").textContent = store.oldHeat - 273;
-      document.getElementById("n-heat").textContent = store.newHeat - 273;
-      bounce();
-      newMarker(place);
-      store.map.flyTo({
+    if (_store.store.oldHeat < _store.store.newHeat) {
+      _store.store.score = _store.store.score + 100;
+      document.getElementById("score").textContent = _store.store.score;
+      document.getElementById("o-heat").textContent = _store.store.oldHeat;
+      document.getElementById("n-heat").textContent = _store.store.newHeat;
+      (0, _events.bounce)();
+      (0, _mapbox.newMarker)(place);
+
+      _store.store.map.flyTo({
         center: place,
         zoom: 6,
         speed: 1,
         curve: 2
       });
     } else {
-      loose();
+      (0, _events.loose)(_store.store.newHeat);
     }
   }
 };
 
 const main = async () => {
   const select = document.getElementById("select");
-  let countries = await euCountries();
+  let countries = await (0, _apiCalls.euCountries)();
 
   for (let country of countries) {
     let element = document.createElement("option");
@@ -31198,8 +31266,8 @@ const main = async () => {
 
 main();
 selectedCountry();
-mapbox();
-},{"babel-polyfill":"../node_modules/babel-polyfill/lib/index.js","mapbox-gl":"../node_modules/mapbox-gl/dist/mapbox-gl.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+(0, _mapbox.mapbox)();
+},{"babel-polyfill":"../node_modules/babel-polyfill/lib/index.js","../js/store":"js/store.js","../js/apiCalls":"js/apiCalls.js","../js/events":"js/events.js","../js/mapbox":"js/mapbox.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -31227,7 +31295,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53064" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62154" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

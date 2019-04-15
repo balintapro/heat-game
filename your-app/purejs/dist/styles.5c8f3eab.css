@@ -23,6 +23,10 @@ body {
   -webkit-box-sizing: border-box;
 }
 
+h1 {
+  margin-top: 0;
+}
+
 p {
   line-height: 20px;
   font-size: 20px;
@@ -56,7 +60,7 @@ p {
   margin: 0 auto 0 auto;
   -webkit-transform-origin: bottom;
           transform-origin: bottom;
-  width: 200px;
+  width: 275px;
   padding: 8px;
   border-radius: 10px;
   color: #d1dadc;
