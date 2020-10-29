@@ -3,3 +3,4 @@ your-app/purejs/node_modules
 your-app/purejs/.cache/
 your-app/purejs/package-lock.json
 your-app/purejs/src/js/config.js
+your-app/purejs/src/js/config
