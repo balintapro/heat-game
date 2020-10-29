@@ -11,7 +11,7 @@ export const euCountries = async () => {
 
 export const weatherByCapital = async weather => {
 	const fetchedWeather = await fetch(
-		"http://api.openweathermap.org/data/2.5/weather?q=" + weather + "&APPID=" + APIKEY
+		"https://api.openweathermap.org/data/2.5/weather?q=" + weather + "&APPID=" + APIKEY
 	);
 	const fetchedWeatherData = await fetchedWeather.json();
 	const fetchedWeatherByCapital = await fetchedWeatherData;
